@@ -20,7 +20,44 @@ public class PictureTester {
 
   public static final String ZERO_COLORS = "zero-colors/";
   public static final String ONE_COLOR = "one-color/";
+  public static final String COLOR_MODIFICATIONS = "color-modifications/";
 
+
+  public static void main(String[] args) {
+    System.out.println("Testing Picture");
+    deleteDirectory();
+
+    section("Zero Color", ZERO_COLORS);
+    testZeroBlue();
+    testZeroGreen();
+    testZeroRed();
+
+    section("Only one Color", ONE_COLOR);
+    testKeepOnlyBlue();
+    testKeepOnlyRed();
+    testKeepOnlyGreen();
+
+    section("Color Modifications", COLOR_MODIFICATIONS);
+    testNegate();
+    // testGrayscale();
+    // testEdgeDetection();
+    // testFaceDetect();
+    // testFixUnderwater();
+    // testMirrorVertical();
+    // testMirrorTemple();
+    // testMirrorArms();
+    // testMirrorGull();
+    // testMirrorDiagonal();
+    // testCollage();
+    // testCopy();
+
+    // testChromakey();
+    // testEncodeAndDecode();  // use png, gif or bmp because of compression
+    // testGetCountRedOverValue(250);
+    // testSetRedToHalfValueInTopHalf();
+    // testClearBlueOverValue(200);
+    // Color avgColor = testGetAverageForColumn(pic, col);// specified column
+  }
 
   static boolean deleteDirectory() {
     return deleteDirectory(new File(PICS_OUTPUT));
@@ -42,40 +79,10 @@ public class PictureTester {
     new File(PICS_OUTPUT + folder).mkdirs();
   }
 
-  public static void main(String[] args) {
-    System.out.println("Testing Picture");
-    deleteDirectory();
-    new File(PICS_OUTPUT).mkdirs();
-
-    section("Zero Color", ZERO_COLORS);
-    testZeroBlue();
-    testZeroGreen();
-    testZeroRed();
-
-    section("Only one Color", ONE_COLOR);
-    testKeepOnlyBlue();
-    testKeepOnlyRed();
-    testKeepOnlyGreen();
-
-    // testNegate();
-    // testGrayscale();
-    // testEdgeDetection();
-    // testFaceDetect();
-    // testFixUnderwater();
-    // testMirrorVertical();
-    // testMirrorTemple();
-    // testMirrorArms();
-    // testMirrorGull();
-    // testMirrorDiagonal();
-    // testCollage();
-    // testCopy();
-
-    // testChromakey();
-    // testEncodeAndDecode();  // use png, gif or bmp because of compression
-    // testGetCountRedOverValue(250);
-    // testSetRedToHalfValueInTopHalf();
-    // testClearBlueOverValue(200);
-    // Color avgColor = testGetAverageForColumn(pic, col);// specified column
+  public static void writeImage(Picture pic, String path) {
+    path = PICS_OUTPUT + path;
+    pic.write(path);
+    System.out.println("Wrote to: " + path);
   }
 
   public static void testZeroBlue() {
@@ -91,9 +98,7 @@ public class PictureTester {
 
     String title = "zero-blue.jpg";
 
-    String path = PICS_OUTPUT + ZERO_COLORS + title;
-    pic.write(path);
-    System.out.println("Wrote to: " + path);
+    writeImage(pic, ZERO_COLORS + title);
   }
 
   public static void testZeroGreen() {
@@ -109,9 +114,7 @@ public class PictureTester {
 
     String title = "zero-green.jpg";
 
-    String path = PICS_OUTPUT + ZERO_COLORS + title;
-    pic.write(path);
-    System.out.println("Wrote to: " + path);
+    writeImage(pic, ZERO_COLORS + title);
   }
 
   public static void testZeroRed() {
@@ -127,9 +130,7 @@ public class PictureTester {
 
     String title = "zero-red.jpg";
 
-    String path = PICS_OUTPUT + ZERO_COLORS + title;
-    pic.write(path);
-    System.out.println("Wrote to: " + path);
+    writeImage(pic, ZERO_COLORS + title);
   }
 
   private static void testKeepOnlyBlue() {
@@ -146,9 +147,7 @@ public class PictureTester {
 
     String title = "only-blue.jpg";
 
-    String path = PICS_OUTPUT + ONE_COLOR + title;
-    pic.write(path);
-    System.out.println("Wrote to: " + path);
+    writeImage(pic, ONE_COLOR + title);
   }
 
   private static void testKeepOnlyGreen() {
@@ -165,9 +164,7 @@ public class PictureTester {
 
     String title = "only-green.jpg";
 
-    String path = PICS_OUTPUT + ONE_COLOR + title;
-    pic.write(path);
-    System.out.println("Wrote to: " + path);
+    writeImage(pic, ONE_COLOR + title);
   }
 
   private static void testKeepOnlyRed() {
@@ -184,22 +181,16 @@ public class PictureTester {
 
     String title = "only-red.jpg";
 
-    String path = PICS_OUTPUT + ONE_COLOR + title;
-    pic.write(path);
-    System.out.println("Wrote to: " + path);
+    writeImage(pic, ONE_COLOR + title);
   }
 
-  /**
-   * Because this is a task commonly invoked on a Picture, it makes sense to add this method
-   * to the Picture class.  If we are doing things that won't likely be used often, we can
-   * write these algorithms in this class.
-   */
   private static void testNegate() {
-    Picture swan = new Picture("swan.jpg");
-    // write this in Picture class
-    swan.negate();
-    swan.explore();
+    System.out.println("Testing Negate!");
+    Picture pic = new Picture(IMAGE);
+    pic.negate();
 
+    String title = "negate.jpg";
+    writeImage(pic, COLOR_MODIFICATIONS + title);
   }
 
   /**

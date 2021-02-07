@@ -79,14 +79,16 @@ public class Picture extends SimplePicture {
 
   }
 
-  /**
-   * Turns a Picture into its negative
-   * flip all the colors:  if color had red = 30, green = 100, blue = 200
-   * negated color red = 225, green= 155, blue = 55
-   */
   public void negate() {
+    Pixel[][] pixels = super.getPixels2D();
 
-
+    for (Pixel[] rowArray : pixels) {
+      for (Pixel pixelObj : rowArray) {
+        pixelObj.setBlue(255 - pixelObj.getBlue());
+        pixelObj.setGreen(255 - pixelObj.getGreen());
+        pixelObj.setRed(255 - pixelObj.getRed());
+      }
+    }
   }
 
   /**

@@ -1,9 +1,9 @@
 package src;
 
-import javax.swing.JFileChooser;
-import javax.swing.JFrame;
-import java.io.*;
-import java.net.*;
+import javax.swing.*;
+import java.io.File;
+import java.net.URL;
+import java.net.URLDecoder;
 
 /**
  * A class to make working with a file chooser easier

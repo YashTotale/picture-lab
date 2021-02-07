@@ -1,0 +1,1 @@
+run="clear &&  find ./src -name '*.java' > sources.txt && javac -d bin @sources.txt && cd bin && java PictureTester"

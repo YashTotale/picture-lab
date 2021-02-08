@@ -58,6 +58,7 @@ public class PictureTester {
     section(MISC);
     testCollage();
     testGetAverageForColumn();
+    testGetAverageForRow();
 
     // testChromakey();
     // testEncodeAndDecode();  // use png, gif or bmp because of compression
@@ -245,10 +246,19 @@ public class PictureTester {
   private static void testGetAverageForColumn() {
     System.out.println("Testing Get Average For Column!");
     Picture pic = new Picture(IMAGE);
-    int col = (int) (Math.random() * pic.getHeight());
+    int col = (int) (Math.random() * pic.getWidth());
 
     Color avg = pic.getAverageForColumn(col);
     System.out.println("Average Color for column " + col + " was " + avg);
+  }
+
+  private static void testGetAverageForRow() {
+    System.out.println("Testing Get Average For Row!");
+    Picture pic = new Picture(IMAGE);
+    int row = (int) (Math.random() * pic.getHeight());
+
+    Color avg = pic.getAverageForRow(row);
+    System.out.println("Average Color for row " + row + " was " + avg);
   }
 
   // so for this one, any pixels that have blue over a certain value are set

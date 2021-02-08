@@ -191,4 +191,20 @@ public class Picture extends SimplePicture {
 
     return new Color(red / pixels.length, green / pixels.length, blue / pixels.length);
   }
+
+  public Color getAverageForRow(int row) {
+    Pixel[][] pixels = this.getPixels2D();
+    int red = 0;
+    int green = 0;
+    int blue = 0;
+
+    for (Pixel pixel : pixels[row]) {
+      red += pixel.getRed();
+      green += pixel.getGreen();
+      blue += pixel.getBlue();
+    }
+
+    return new Color(red / pixels.length, green / pixels.length, blue / pixels.length);
+  }
+
 }

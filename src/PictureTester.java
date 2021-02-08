@@ -16,7 +16,7 @@ public class PictureTester {
   public static final String PICS_INPUT = System.getProperty("user.dir") + "/images/";
   public static final String PICS_OUTPUT = System.getProperty("user.dir") + "/processed/";
 
-  public static final String IMAGE = PICS_INPUT + "butterfly1.jpg";
+  public static final String IMAGE = PICS_INPUT + "beach.jpg";
 
   public static final String ZERO_COLORS = "zero-colors/";
   public static final String ONE_COLOR = "one-color/";
@@ -40,7 +40,7 @@ public class PictureTester {
     section("Color Modifications", COLOR_MODIFICATIONS);
     testNegate();
     testGrayscale();
-    // testEdgeDetection();
+    testEdgeDetection();
     // testFaceDetect();
     // testFixUnderwater();
     // testMirrorVertical();
@@ -206,13 +206,12 @@ public class PictureTester {
    * Method to test edgeDetection
    */
   public static void testEdgeDetection() {
+    System.out.println("Testing Grayscale!");
+    Picture pic = new Picture(IMAGE);
+    pic.edgeDetection(10);
 
-    Picture swan = new Picture("swan.jpg");
-
-    // written in Picture class
-    swan.edgeDetection(10);
-    swan.explore();
-    swan.write("swan outline.jpg");// writes the new picture to a new file
+    String title = "edge-detection.jpg";
+    writeImage(pic, COLOR_MODIFICATIONS + title);
   }
 
   /**

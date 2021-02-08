@@ -1,5 +1,6 @@
 package src;
 
+import java.awt.*;
 import java.awt.image.BufferedImage;
 
 /**
@@ -180,17 +181,23 @@ public class Picture extends SimplePicture {
    * @param edgeDist the distance for finding edges
    */
   public void edgeDetection(int edgeDist) {
-    Pixel leftPixel = null;// this pixel will always be the one to
-    // the left of rightPixel.  If this Pixel
-    // is far enough away (based on edgeDist), then
-    // leftPixel is set to Color black, else, white
+    Pixel leftPixel = null;
 
-    Pixel rightPixel = null;// this Pixel doesn't change value, it is just
-    // used as a reference for comparing with leftPixel
+    Pixel[][] pixels = this.getPixels2D();
 
-    Pixel[][] pixels = this.getPixels2D();// gets the 2D array of Pixel
-    // Big hint, the Pixel class has a method called colorDistance(Color) which
-    // returns the distance the input Color is from this Pixel's Color
-
+    for (Pixel[] rowArray : pixels) {
+      for(int c = 0; c < rowArray.length; c++) {
+        Pixel pixel = rowArray[c];
+        if(leftPixel != null) {
+          double change = pixel.colorDistance(leftPixel.getColor());
+          if(change > edgeDist) {
+            leftPixel.setColor(Color.BLACK);
+          } else {
+            leftPixel.setColor(Color.WHITE);
+          }
+        }
+        leftPixel = pixel;
+      }
+    }
   }
 }

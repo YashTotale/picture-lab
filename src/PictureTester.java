@@ -29,6 +29,7 @@ public class PictureTester {
 
   public static void main(String[] args) {
     deleteDirectory();
+    writeImage(new Picture(IMAGE), "original.jpg");
 
     section(ZERO_COLORS, true);
     testZeroBlue();
@@ -59,11 +60,11 @@ public class PictureTester {
     testGetAverageForColumn();
     testGetAverageForRow();
     testGetCountColorsOverValue();
+    testClearColorsOverValue();
 
     // testChromakey();
     // testEncodeAndDecode();  // use png, gif or bmp because of compression
     // testSetRedToHalfValueInTopHalf();
-    // testClearBlueOverValue(200);
     System.out.println("-----");
   }
 
@@ -113,6 +114,7 @@ public class PictureTester {
   }
 
   public static void writeImage(Picture pic, String path) {
+    new File(PICS_OUTPUT).mkdirs();
     path = PICS_OUTPUT + path;
     pic.write(path);
     System.out.println("Wrote to: " + path);
@@ -289,10 +291,21 @@ public class PictureTester {
     System.out.println("Number of pixels with blue value over " + value + " was " + blueCount);
   }
 
-  // so for this one, any pixels that have blue over a certain value are set
-  // to no blue at all.  Or for a different effect, have those pixels set to black.
-  private static void testClearBlueOverValue(int i) {
+  private static void testClearColorsOverValue() {
+    test("Clear Colors Over Value");
+    int value = (int) (Math.random() * 256);
 
+    Picture redPic = new Picture(IMAGE);
+    Picture greenPic = new Picture(IMAGE);
+    Picture bluePic = new Picture(IMAGE);
+
+    redPic.clearColorOverValue("red", value);
+    greenPic.clearColorOverValue("green", value);
+    bluePic.clearColorOverValue("blue", value);
+
+    writeImage(redPic, MISC + "clear-red-over-" + value + ".jpg");
+    writeImage(greenPic, MISC + "clear-green-over-" + value + ".jpg");
+    writeImage(bluePic, MISC + "clear-blue-over-" + value + ".jpg");
   }
 
   // goes to each pixel in the top half and cuts the red component in half

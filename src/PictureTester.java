@@ -39,7 +39,7 @@ public class PictureTester {
 
     section("Color Modifications", COLOR_MODIFICATIONS);
     testNegate();
-    // testGrayscale();
+    testGrayscale();
     // testEdgeDetection();
     // testFaceDetect();
     // testFixUnderwater();
@@ -193,15 +193,13 @@ public class PictureTester {
     writeImage(pic, COLOR_MODIFICATIONS + title);
   }
 
-  /**
-   * Again, like the method above, this is pretty common, so let's add this method to the
-   * Picture class.
-   */
   private static void testGrayscale() {
-    Picture swan = new Picture("swan.jpg");
-    // write this method in Picture class
-    swan.grayScale();
-    swan.explore();
+    System.out.println("Testing Grayscale!");
+    Picture pic = new Picture(IMAGE);
+    pic.grayscale();
+
+    String title = "grayscale.jpg";
+    writeImage(pic, COLOR_MODIFICATIONS + title);
   }
 
   /**

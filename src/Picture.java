@@ -96,8 +96,18 @@ public class Picture extends SimplePicture {
    * for this.  The most common is to find the mean of the red, green
    * and blue components and set each component to that average
    */
-  public void grayScale() {
+  public void grayscale() {
+    Pixel[][] pixels = super.getPixels2D();
 
+    for (Pixel[] rowArray : pixels) {
+      for (Pixel pixelObj : rowArray) {
+        int total = pixelObj.getBlue() + pixelObj.getGreen() +  pixelObj.getRed();
+        int gray = total / 3;
+        pixelObj.setBlue(gray);
+        pixelObj.setGreen(gray);
+        pixelObj.setRed(gray);
+      }
+    }
   }
 
   /**

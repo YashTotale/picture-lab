@@ -2,6 +2,7 @@ package src;
 
 import java.awt.*;
 import java.io.File;
+import java.util.Locale;
 
 /**
  * This class contains class (static) methods
@@ -28,26 +29,25 @@ public class PictureTester {
     System.out.println("Testing Picture");
     deleteDirectory();
 
-    section("Zero Color", ZERO_COLORS);
+    section(ZERO_COLORS);
     testZeroBlue();
     testZeroGreen();
     testZeroRed();
 
-    section("Only one Color", ONE_COLOR);
+    section(ONE_COLOR);
     testKeepOnlyBlue();
     testKeepOnlyRed();
     testKeepOnlyGreen();
 
-    section("Color Modifications", COLOR_MODIFICATIONS);
+    section(COLOR_MODIFICATIONS);
     testNegate();
     testGrayscale();
     testEdgeDetection();
 
-    section("Orientation Modifications", ORIENTATION_MODIFICATIONS);
+    section(ORIENTATION_MODIFICATIONS);
     testMirrorVertical();
     // testFaceDetect();
     // testFixUnderwater();
-    // testMirrorTemple();
     // testMirrorArms();
     // testMirrorGull();
     // testMirrorDiagonal();
@@ -76,7 +76,14 @@ public class PictureTester {
     return dir.delete();
   }
 
-  public static void section(String title, String folder) {
+  public static void section(String folder) {
+    String[] words = folder.replaceAll("-", " ").replaceAll("/", "").split("\\s");
+    for(int i = 0; i < words.length; i++) {
+      String word = words[i];
+      words[i] = word.substring(0,1).toUpperCase() + word.substring(1);
+    }
+
+    String title = String.join(" ", words);
     System.out.println("\n-----");
     System.out.println(title + "\n");
     new File(PICS_OUTPUT + folder).mkdirs();
@@ -205,11 +212,8 @@ public class PictureTester {
     writeImage(pic, COLOR_MODIFICATIONS + title);
   }
 
-  /**
-   * Method to test edgeDetection
-   */
   public static void testEdgeDetection() {
-    System.out.println("Testing Grayscale!");
+    System.out.println("Testing Edge Detection!");
     Picture pic = new Picture(IMAGE);
     pic.edgeDetection(10);
 
@@ -217,9 +221,6 @@ public class PictureTester {
     writeImage(pic, COLOR_MODIFICATIONS + title);
   }
 
-  /**
-   * Method to test mirrorVertical
-   */
   public static void testMirrorVertical() {
     System.out.println("Testing Mirror Vertical!");
     Picture pic = new Picture(IMAGE);
@@ -227,41 +228,6 @@ public class PictureTester {
 
     String title = "mirror-vertical.jpg";
     writeImage(pic, ORIENTATION_MODIFICATIONS + title);
-  }
-
-  /**
-   * Method to test mirrorTemple
-   */
-  public static void testMirrorTemple() {
-    Picture temple = new Picture("temple.jpg");
-    temple.explore();
-    // This method makes a mirror image of a section of this picture
-    // If this picture is of the temple, it mirror images the top.
-    // what if this picture is of a different image?
-    int mirrorPoint = 276;
-    Pixel leftPixel = null;
-    Pixel rightPixel = null;
-
-    // this method creates a mirror image for a section of its
-    // pixels.  What would happen if we used a different starting
-    // image?  Is mirrorTemple a useful method in the long run?  How
-    // could you change it so that it would be more useful?
-    Pixel[][] pixels = temple.getPixels2D();
-
-    // loop through the rows
-    for (int row = 27; row < 97; row++) {
-      // loop from 13 to just before the mirror point
-      for (int col = 13; col < mirrorPoint; col++) {
-
-        leftPixel = pixels[row][col];
-        rightPixel = pixels[row]
-          [mirrorPoint - col + mirrorPoint];
-        rightPixel.setColor(leftPixel.getColor());
-      }
-    }
-
-
-    temple.explore();
   }
 
   /**

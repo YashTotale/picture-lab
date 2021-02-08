@@ -15,9 +15,6 @@ public class Picture extends SimplePicture {
    * Constructor that takes no arguments
    */
   public Picture() {
-    /* not needed but use it to show students the implicit call to super()
-     * child constructors always call a parent constructor
-     */
     super();
   }
 
@@ -27,7 +24,6 @@ public class Picture extends SimplePicture {
    * @param fileName the name of the file to create the picture from
    */
   public Picture(String fileName) {
-    // let the parent class handle this fileName
     super(fileName);
   }
 
@@ -38,7 +34,6 @@ public class Picture extends SimplePicture {
    * @param width  the width of the desired picture
    */
   public Picture(int height, int width) {
-    // let the parent class handle this width and height
     super(width, height);
   }
 
@@ -49,7 +44,6 @@ public class Picture extends SimplePicture {
    * @param copyPicture the picture to copy
    */
   public Picture(Picture copyPicture) {
-    // let the parent class do the copy
     super(copyPicture);
   }
 
@@ -92,20 +86,13 @@ public class Picture extends SimplePicture {
     }
   }
 
-  /**
-   * converts a color image into grayscale.  There are many algorithms
-   * for this.  The most common is to find the mean of the red, green
-   * and blue components and set each component to that average
-   */
   public void grayscale() {
     Pixel[][] pixels = super.getPixels2D();
 
     for (Pixel[] rowArray : pixels) {
       for (Pixel pixelObj : rowArray) {
         int gray = (int) pixelObj.getAverage();
-        pixelObj.setBlue(gray);
-        pixelObj.setGreen(gray);
-        pixelObj.setRed(gray);
+        pixelObj.setColor(new Color(gray, gray, gray));
       }
     }
   }

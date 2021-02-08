@@ -204,7 +204,28 @@ public class Picture extends SimplePicture {
       blue += pixel.getBlue();
     }
 
-    return new Color(red / pixels.length, green / pixels.length, blue / pixels.length);
+    return new Color(red / pixels[row].length, green / pixels[row].length, blue / pixels[row].length);
   }
 
+  public int getCountColorOverValue(String color, int value) {
+    int count = 0;
+
+    Pixel[] pixels = this.getPixels();
+
+    for (Pixel pixel : pixels) {
+      switch (color) {
+        case "red": {
+          if (pixel.getRed() > value) count++;
+        }
+        case "green": {
+          if (pixel.getGreen() > value) count++;
+        }
+        case "blue": {
+          if (pixel.getBlue() > value) count++;
+        }
+      }
+    }
+
+    return count;
+  }
 }

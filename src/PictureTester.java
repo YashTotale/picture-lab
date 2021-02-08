@@ -59,10 +59,10 @@ public class PictureTester {
     testCollage();
     testGetAverageForColumn();
     testGetAverageForRow();
+    testGetCountColorsOverValue();
 
     // testChromakey();
     // testEncodeAndDecode();  // use png, gif or bmp because of compression
-    // testGetCountRedOverValue(250);
     // testSetRedToHalfValueInTopHalf();
     // testClearBlueOverValue(200);
   }
@@ -261,10 +261,26 @@ public class PictureTester {
     System.out.println("Average Color for row " + row + " was " + avg);
   }
 
+  private static void testGetCountColorsOverValue() {
+    System.out.println("Testing Get Count Colors Over Value!");
+    Picture pic = new Picture(IMAGE);
+
+    int red = (int) (Math.random() * 256);
+    int green = (int) (Math.random() * 256);
+    int blue = (int) (Math.random() * 256);
+
+    int redCount = pic.getCountColorOverValue("red", red);
+    int greenCount = pic.getCountColorOverValue("green", green);
+    int blueCount = pic.getCountColorOverValue("blue", blue);
+
+    System.out.println("Number of pixels with red value over " + red + " was " + redCount);
+    System.out.println("Number of pixels with green value over " + red + " was " + greenCount);
+    System.out.println("Number of pixels with blue value over " + red + " was " + blueCount);
+  }
+
   // so for this one, any pixels that have blue over a certain value are set
   // to no blue at all.  Or for a different effect, have those pixels set to black.
   private static void testClearBlueOverValue(int i) {
-
 
   }
 
@@ -272,15 +288,8 @@ public class PictureTester {
   // So, bottom half of pic should look normal
   private static void testSetRedToHalfValueInTopHalf() {
 
-
   }
 
-  // displays the number of pixels in the pic that have a red component
-  // greater than the specifies int.
-  private static void testGetCountRedOverValue(int i) {
-
-
-  }
 
   /**
    * The method below is really cool!!  Use the following approach:

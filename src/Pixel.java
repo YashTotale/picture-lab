@@ -85,7 +85,7 @@ public class Pixel {
   /**
    * Method to correct a color value to be within 0 to 255
    *
-   * @param the value to use
+   * @param value the value to use
    * @return a value within 0 to 255
    */
   private static int correctValue(int value) {

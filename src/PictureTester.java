@@ -16,11 +16,12 @@ public class PictureTester {
   public static final String PICS_INPUT = System.getProperty("user.dir") + "/images/";
   public static final String PICS_OUTPUT = System.getProperty("user.dir") + "/processed/";
 
-  public static final String IMAGE = PICS_INPUT + "beach.jpg";
+  public static final String IMAGE = PICS_INPUT + "butterfly1.jpg";
 
   public static final String ZERO_COLORS = "zero-colors/";
   public static final String ONE_COLOR = "one-color/";
   public static final String COLOR_MODIFICATIONS = "color-modifications/";
+  public static final String ORIENTATION_MODIFICATIONS = "orientation-modifications/";
 
 
   public static void main(String[] args) {
@@ -41,9 +42,11 @@ public class PictureTester {
     testNegate();
     testGrayscale();
     testEdgeDetection();
+
+    section("Orientation Modifications", ORIENTATION_MODIFICATIONS);
+    testMirrorVertical();
     // testFaceDetect();
     // testFixUnderwater();
-    // testMirrorVertical();
     // testMirrorTemple();
     // testMirrorArms();
     // testMirrorGull();
@@ -218,12 +221,12 @@ public class PictureTester {
    * Method to test mirrorVertical
    */
   public static void testMirrorVertical() {
-    Picture caterpillar = new Picture("caterpillar.jpg");
-    caterpillar.explore();
-    // this should take the left-hand half of the picture and reflect it across
-    // the vertical midline.
-    caterpillar.mirrorVertical();// need to write this method in the picture class
-    caterpillar.explore();
+    System.out.println("Testing Mirror Vertical!");
+    Picture pic = new Picture(IMAGE);
+    pic.mirrorVertical();
+
+    String title = "mirror-vertical.jpg";
+    writeImage(pic, ORIENTATION_MODIFICATIONS + title);
   }
 
   /**

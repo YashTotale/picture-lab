@@ -102,8 +102,7 @@ public class Picture extends SimplePicture {
 
     for (Pixel[] rowArray : pixels) {
       for (Pixel pixelObj : rowArray) {
-        int total = pixelObj.getBlue() + pixelObj.getGreen() +  pixelObj.getRed();
-        int gray = total / 3;
+        int gray = (int) pixelObj.getAverage();
         pixelObj.setBlue(gray);
         pixelObj.setGreen(gray);
         pixelObj.setRed(gray);
@@ -111,15 +110,17 @@ public class Picture extends SimplePicture {
     }
   }
 
-  /**
-   * Method that mirrors the picture around horizontal line that passes
-   * through the center of the picture from left to right
-   */
   public void mirrorVertical() {
     Pixel[][] pixels = this.getPixels2D();
-    Pixel leftPixel = null;
-    Pixel rightPixel = null;
 
+    for(int r = 0; r < pixels.length / 2; r++) {
+      int opposite = pixels.length - r - 1;
+      for(int c = 0; c < pixels[r].length; c++) {
+        Pixel temp = pixels[r][c];
+        pixels[r][c].setColor(pixels[opposite][c].getColor());
+        pixels[opposite][c].setColor(temp.getColor());
+      }
+    }
   }
 
   /**

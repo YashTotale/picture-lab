@@ -75,25 +75,21 @@ public class Picture extends SimplePicture {
   }
 
   public void negate() {
-    Pixel[][] pixels = super.getPixels2D();
+    Pixel[] pixels = super.getPixels();
 
-    for (Pixel[] rowArray : pixels) {
-      for (Pixel pixelObj : rowArray) {
-        pixelObj.setBlue(255 - pixelObj.getBlue());
-        pixelObj.setGreen(255 - pixelObj.getGreen());
-        pixelObj.setRed(255 - pixelObj.getRed());
-      }
+    for (Pixel pixel : pixels) {
+      pixel.setBlue(255 - pixel.getBlue());
+      pixel.setGreen(255 - pixel.getGreen());
+      pixel.setRed(255 - pixel.getRed());
     }
   }
 
   public void grayscale() {
-    Pixel[][] pixels = super.getPixels2D();
+    Pixel[] pixels = super.getPixels();
 
-    for (Pixel[] rowArray : pixels) {
-      for (Pixel pixelObj : rowArray) {
-        int gray = (int) pixelObj.getAverage();
-        pixelObj.setColor(new Color(gray, gray, gray));
-      }
+    for (Pixel pixel : pixels) {
+      int gray = (int) pixel.getAverage();
+      pixel.setColor(new Color(gray, gray, gray));
     }
   }
 
@@ -139,22 +135,13 @@ public class Picture extends SimplePicture {
     }
   }
 
-  /**
-   * Method to create a collage of several pictures
-   */
-  public void createCollage() {
-    Picture flower1 = new Picture("flower1.jpg");
-    Picture flower2 = new Picture("flower2.jpg");
-    this.copy(flower1, 0, 0);
-    this.copy(flower2, 100, 0);
-    this.copy(flower1, 200, 0);
-    Picture flowerNoBlue = new Picture(flower2);
-
-    this.copy(flowerNoBlue, 300, 0);
-    this.copy(flower1, 400, 0);
-    this.copy(flower2, 500, 0);
-    this.mirrorVertical();
-    this.write("collage.jpg");
+  public void createCollage(String[] pictures) {
+    for (int i = 0; i < pictures.length; i++) {
+      Picture pic = new Picture(pictures[i]);
+      int row = (int) (Math.random() * this.getWidth());
+      int col = (int) (Math.random() * this.getHeight());
+      this.copy(pic, row / 2, col / 2);
+    }
   }
 
   /**

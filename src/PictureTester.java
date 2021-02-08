@@ -2,7 +2,6 @@ package src;
 
 import java.awt.*;
 import java.io.File;
-import java.util.Locale;
 
 /**
  * This class contains class (static) methods
@@ -17,12 +16,15 @@ public class PictureTester {
   public static final String PICS_INPUT = System.getProperty("user.dir") + "/images/";
   public static final String PICS_OUTPUT = System.getProperty("user.dir") + "/processed/";
 
-  public static final String IMAGE = PICS_INPUT + "butterfly1.jpg";
+  public static final String[] PICS = new File(PICS_INPUT).list();
+
+  public static final String IMAGE = getRandomImage();
 
   public static final String ZERO_COLORS = "zero-colors/";
   public static final String ONE_COLOR = "one-color/";
   public static final String COLOR_MODIFICATIONS = "color-modifications/";
   public static final String ORIENTATION_MODIFICATIONS = "orientation-modifications/";
+  public static final String MISC = "misc/";
 
 
   public static void main(String[] args) {
@@ -51,8 +53,10 @@ public class PictureTester {
     // testMirrorArms();
     // testMirrorGull();
     // testMirrorDiagonal();
-    // testCollage();
     // testCopy();
+
+    section(MISC);
+    testCollage();
 
     // testChromakey();
     // testEncodeAndDecode();  // use png, gif or bmp because of compression
@@ -60,6 +64,11 @@ public class PictureTester {
     // testSetRedToHalfValueInTopHalf();
     // testClearBlueOverValue(200);
     // Color avgColor = testGetAverageForColumn(pic, col);// specified column
+  }
+
+  static String getRandomImage() {
+    int random = (int) (PICS.length * Math.random());
+    return PICS_INPUT + PICS[random];
   }
 
   static boolean deleteDirectory() {
@@ -99,11 +108,9 @@ public class PictureTester {
     System.out.println("Testing Zero Blue!");
     Picture pic = new Picture(IMAGE);
 
-    Pixel[][] pixels = pic.getPixels2D();
-    for (Pixel[] rowArray : pixels) {
-      for (Pixel pixelObj : rowArray) {
-        pixelObj.setBlue(0);
-      }
+    Pixel[] pixels = pic.getPixels();
+    for (Pixel pixel : pixels) {
+      pixel.setBlue(0);
     }
 
     String title = "zero-blue.jpg";
@@ -115,11 +122,9 @@ public class PictureTester {
     System.out.println("Testing Zero Green!");
     Picture pic = new Picture(IMAGE);
 
-    Pixel[][] pixels = pic.getPixels2D();
-    for (Pixel[] rowArray : pixels) {
-      for (Pixel pixelObj : rowArray) {
-        pixelObj.setGreen(0);
-      }
+    Pixel[] pixels = pic.getPixels();
+    for (Pixel pixel : pixels) {
+      pixel.setGreen(0);
     }
 
     String title = "zero-green.jpg";
@@ -131,11 +136,9 @@ public class PictureTester {
     System.out.println("Testing Zero Red!");
     Picture pic = new Picture(IMAGE);
 
-    Pixel[][] pixels = pic.getPixels2D();
-    for (Pixel[] rowArray : pixels) {
-      for (Pixel pixelObj : rowArray) {
-        pixelObj.setRed(0);
-      }
+    Pixel[] pixels = pic.getPixels();
+    for (Pixel pixel : pixels) {
+      pixel.setRed(0);
     }
 
     String title = "zero-red.jpg";
@@ -147,13 +150,12 @@ public class PictureTester {
     System.out.println("Testing Keep Only Blue!");
     Picture pic = new Picture(IMAGE);
 
-    Pixel[][] pixels = pic.getPixels2D();
-    for (Pixel[] rowArray : pixels) {
-      for (Pixel pixelObj : rowArray) {
-        pixelObj.setGreen(0);
-        pixelObj.setRed(0);
-      }
+    Pixel[] pixels = pic.getPixels();
+    for (Pixel pixel : pixels) {
+      pixel.setGreen(0);
+      pixel.setRed(0);
     }
+
 
     String title = "only-blue.jpg";
 
@@ -164,12 +166,10 @@ public class PictureTester {
     System.out.println("Testing Keep Only Green!");
     Picture pic = new Picture(IMAGE);
 
-    Pixel[][] pixels = pic.getPixels2D();
-    for (Pixel[] rowArray : pixels) {
-      for (Pixel pixelObj : rowArray) {
-        pixelObj.setBlue(0);
-        pixelObj.setRed(0);
-      }
+    Pixel[] pixels = pic.getPixels();
+    for (Pixel pixel : pixels) {
+      pixel.setBlue(0);
+      pixel.setRed(0);
     }
 
     String title = "only-green.jpg";
@@ -181,12 +181,10 @@ public class PictureTester {
     System.out.println("Testing Keep Only Red!");
     Picture pic = new Picture(IMAGE);
 
-    Pixel[][] pixels = pic.getPixels2D();
-    for (Pixel[] rowArray : pixels) {
-      for (Pixel pixelObj : rowArray) {
-        pixelObj.setGreen(0);
-        pixelObj.setBlue(0);
-      }
+    Pixel[] pixels = pic.getPixels();
+    for (Pixel pixel : pixels) {
+      pixel.setGreen(0);
+      pixel.setBlue(0);
     }
 
     String title = "only-red.jpg";
@@ -215,7 +213,7 @@ public class PictureTester {
   public static void testEdgeDetection() {
     System.out.println("Testing Edge Detection!");
     Picture pic = new Picture(IMAGE);
-    pic.edgeDetection(10);
+    pic.edgeDetection(20);
 
     String title = "edge-detection.jpg";
     writeImage(pic, COLOR_MODIFICATIONS + title);
@@ -230,15 +228,18 @@ public class PictureTester {
     writeImage(pic, ORIENTATION_MODIFICATIONS + title);
   }
 
-  /**
-   * Method to test the collage method
-   */
   public static void testCollage() {
-    Picture canvas = new Picture("640x480.jpg");
-    canvas.createCollage();// this method has been written in the Picture class
-    // how can it be changed so that we could pass in
-    // pictures that could be added to a collage?
-    canvas.explore();
+    System.out.println("Testing Collage!");
+    Picture pic = new Picture(PICS_INPUT + "640x480.jpg");
+
+    String[] pictures = new String[10];
+    for (int i = 0; i < pictures.length; i++) {
+      pictures[i] = getRandomImage();
+    }
+    pic.createCollage(pictures);
+
+    String title = "collage.jpg";
+    writeImage(pic, MISC + title);
   }
 
 

@@ -57,13 +57,13 @@ public class PictureTester {
 
     section(MISC);
     testCollage();
+    testGetAverageForColumn();
 
     // testChromakey();
     // testEncodeAndDecode();  // use png, gif or bmp because of compression
     // testGetCountRedOverValue(250);
     // testSetRedToHalfValueInTopHalf();
     // testClearBlueOverValue(200);
-    // Color avgColor = testGetAverageForColumn(pic, col);// specified column
   }
 
   static String getRandomImage() {
@@ -242,19 +242,13 @@ public class PictureTester {
     writeImage(pic, MISC + title);
   }
 
+  private static void testGetAverageForColumn() {
+    System.out.println("Testing Get Average For Column!");
+    Picture pic = new Picture(IMAGE);
+    int col = (int) (Math.random() * pic.getHeight());
 
-  /*so, you have a choice for this one and the methods that follow.  You can write the
-   * code in the methods below or you can add functionality to the picture class.  Sometimes
-   * it makes sense to add it to the class for reusability reasons.  Sometimes it is too unique
-   * a need to add to the class.
-   */
-
-  // So, you can create a Picture Object and find the average value of
-  // the component in that column
-  private static Color testGetAverageForColumn(Picture pic, int col) {
-    Color avg = null;
-
-    return avg;
+    Color avg = pic.getAverageForColumn(col);
+    System.out.println("Average Color for column " + col + " was " + avg);
   }
 
   // so for this one, any pixels that have blue over a certain value are set

@@ -165,7 +165,7 @@ public class Picture extends SimplePicture {
         Pixel pixel = rowArray[c];
         if(leftPixel != null) {
           double change = pixel.colorDistance(leftPixel.getColor());
-          if(change > edgeDist) {
+          if (change > edgeDist) {
             leftPixel.setColor(Color.BLACK);
           } else {
             leftPixel.setColor(Color.WHITE);
@@ -174,5 +174,21 @@ public class Picture extends SimplePicture {
         leftPixel = pixel;
       }
     }
+  }
+
+  public Color getAverageForColumn(int col) {
+    Pixel[][] pixels = this.getPixels2D();
+    int red = 0;
+    int green = 0;
+    int blue = 0;
+
+    for (Pixel[] rowArray : pixels) {
+      Pixel pixel = rowArray[col];
+      red += pixel.getRed();
+      green += pixel.getGreen();
+      blue += pixel.getBlue();
+    }
+
+    return new Color(red / pixels.length, green / pixels.length, blue / pixels.length);
   }
 }

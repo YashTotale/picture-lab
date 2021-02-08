@@ -1,5 +1,6 @@
 package src;
 
+import java.awt.*;
 import java.awt.image.BufferedImage;
 
 /**
@@ -14,9 +15,6 @@ public class Picture extends SimplePicture {
    * Constructor that takes no arguments
    */
   public Picture() {
-    /* not needed but use it to show students the implicit call to super()
-     * child constructors always call a parent constructor
-     */
     super();
   }
 
@@ -26,7 +24,6 @@ public class Picture extends SimplePicture {
    * @param fileName the name of the file to create the picture from
    */
   public Picture(String fileName) {
-    // let the parent class handle this fileName
     super(fileName);
   }
 
@@ -37,7 +34,6 @@ public class Picture extends SimplePicture {
    * @param width  the width of the desired picture
    */
   public Picture(int height, int width) {
-    // let the parent class handle this width and height
     super(width, height);
   }
 
@@ -48,7 +44,6 @@ public class Picture extends SimplePicture {
    * @param copyPicture the picture to copy
    */
   public Picture(Picture copyPicture) {
-    // let the parent class do the copy
     super(copyPicture);
   }
 
@@ -80,35 +75,35 @@ public class Picture extends SimplePicture {
   }
 
   public void negate() {
-    Pixel[][] pixels = super.getPixels2D();
+    Pixel[] pixels = super.getPixels();
 
-    for (Pixel[] rowArray : pixels) {
-      for (Pixel pixelObj : rowArray) {
-        pixelObj.setBlue(255 - pixelObj.getBlue());
-        pixelObj.setGreen(255 - pixelObj.getGreen());
-        pixelObj.setRed(255 - pixelObj.getRed());
-      }
+    for (Pixel pixel : pixels) {
+      pixel.setBlue(255 - pixel.getBlue());
+      pixel.setGreen(255 - pixel.getGreen());
+      pixel.setRed(255 - pixel.getRed());
     }
   }
 
-  /**
-   * converts a color image into grayscale.  There are many algorithms
-   * for this.  The most common is to find the mean of the red, green
-   * and blue components and set each component to that average
-   */
-  public void grayScale() {
+  public void grayscale() {
+    Pixel[] pixels = super.getPixels();
 
+    for (Pixel pixel : pixels) {
+      int gray = (int) pixel.getAverage();
+      pixel.setColor(new Color(gray, gray, gray));
+    }
   }
 
-  /**
-   * Method that mirrors the picture around horizontal line that passes
-   * through the center of the picture from left to right
-   */
   public void mirrorVertical() {
     Pixel[][] pixels = this.getPixels2D();
-    Pixel leftPixel = null;
-    Pixel rightPixel = null;
 
+    for(int r = 0; r < pixels.length / 2; r++) {
+      int opposite = pixels.length - r - 1;
+      for(int c = 0; c < pixels[r].length; c++) {
+        Pixel temp = pixels[r][c];
+        pixels[r][c].setColor(pixels[opposite][c].getColor());
+        pixels[opposite][c].setColor(temp.getColor());
+      }
+    }
   }
 
   /**
@@ -140,22 +135,13 @@ public class Picture extends SimplePicture {
     }
   }
 
-  /**
-   * Method to create a collage of several pictures
-   */
-  public void createCollage() {
-    Picture flower1 = new Picture("flower1.jpg");
-    Picture flower2 = new Picture("flower2.jpg");
-    this.copy(flower1, 0, 0);
-    this.copy(flower2, 100, 0);
-    this.copy(flower1, 200, 0);
-    Picture flowerNoBlue = new Picture(flower2);
-
-    this.copy(flowerNoBlue, 300, 0);
-    this.copy(flower1, 400, 0);
-    this.copy(flower2, 500, 0);
-    this.mirrorVertical();
-    this.write("collage.jpg");
+  public void createCollage(String[] pictures) {
+    for (int i = 0; i < pictures.length; i++) {
+      Picture pic = new Picture(pictures[i]);
+      int row = (int) (Math.random() * this.getWidth());
+      int col = (int) (Math.random() * this.getHeight());
+      this.copy(pic, row / 2, col / 2);
+    }
   }
 
   /**
@@ -170,17 +156,76 @@ public class Picture extends SimplePicture {
    * @param edgeDist the distance for finding edges
    */
   public void edgeDetection(int edgeDist) {
-    Pixel leftPixel = null;// this pixel will always be the one to
-    // the left of rightPixel.  If this Pixel
-    // is far enough away (based on edgeDist), then
-    // leftPixel is set to Color black, else, white
+    Pixel leftPixel = null;
 
-    Pixel rightPixel = null;// this Pixel doesn't change value, it is just
-    // used as a reference for comparing with leftPixel
+    Pixel[][] pixels = this.getPixels2D();
 
-    Pixel[][] pixels = this.getPixels2D();// gets the 2D array of Pixel
-    // Big hint, the Pixel class has a method called colorDistance(Color) which
-    // returns the distance the input Color is from this Pixel's Color
+    for (Pixel[] rowArray : pixels) {
+      for(int c = 0; c < rowArray.length; c++) {
+        Pixel pixel = rowArray[c];
+        if(leftPixel != null) {
+          double change = pixel.colorDistance(leftPixel.getColor());
+          if (change > edgeDist) {
+            leftPixel.setColor(Color.BLACK);
+          } else {
+            leftPixel.setColor(Color.WHITE);
+          }
+        }
+        leftPixel = pixel;
+      }
+    }
+  }
 
+  public Color getAverageForColumn(int col) {
+    Pixel[][] pixels = this.getPixels2D();
+    int red = 0;
+    int green = 0;
+    int blue = 0;
+
+    for (Pixel[] rowArray : pixels) {
+      Pixel pixel = rowArray[col];
+      red += pixel.getRed();
+      green += pixel.getGreen();
+      blue += pixel.getBlue();
+    }
+
+    return new Color(red / pixels.length, green / pixels.length, blue / pixels.length);
+  }
+
+  public Color getAverageForRow(int row) {
+    Pixel[][] pixels = this.getPixels2D();
+    int red = 0;
+    int green = 0;
+    int blue = 0;
+
+    for (Pixel pixel : pixels[row]) {
+      red += pixel.getRed();
+      green += pixel.getGreen();
+      blue += pixel.getBlue();
+    }
+
+    return new Color(red / pixels[row].length, green / pixels[row].length, blue / pixels[row].length);
+  }
+
+  public int getCountColorOverValue(String color, int value) {
+    int count = 0;
+
+    Pixel[] pixels = this.getPixels();
+
+    for (Pixel pixel : pixels) {
+      switch (color) {
+        case "red": {
+          if (pixel.getRed() > value) count++;
+        }
+        case "green": {
+          if (pixel.getGreen() > value) count++;
+        }
+        case "blue": {
+          if (pixel.getBlue() > value) count++;
+        }
+      }
+    }
+
+    return count;
   }
 }

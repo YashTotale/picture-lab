@@ -16,47 +16,60 @@ public class PictureTester {
   public static final String PICS_INPUT = System.getProperty("user.dir") + "/images/";
   public static final String PICS_OUTPUT = System.getProperty("user.dir") + "/processed/";
 
-  public static final String IMAGE = PICS_INPUT + "butterfly1.jpg";
+  public static final String[] PICS = new File(PICS_INPUT).list();
+
+  public static final String IMAGE = getRandomImage();
 
   public static final String ZERO_COLORS = "zero-colors/";
   public static final String ONE_COLOR = "one-color/";
   public static final String COLOR_MODIFICATIONS = "color-modifications/";
+  public static final String ORIENTATION_MODIFICATIONS = "orientation-modifications/";
+  public static final String MISC = "misc/";
 
 
   public static void main(String[] args) {
-    System.out.println("Testing Picture");
     deleteDirectory();
 
-    section("Zero Color", ZERO_COLORS);
+    section(ZERO_COLORS, true);
     testZeroBlue();
     testZeroGreen();
     testZeroRed();
 
-    section("Only one Color", ONE_COLOR);
+    section(ONE_COLOR);
     testKeepOnlyBlue();
     testKeepOnlyRed();
     testKeepOnlyGreen();
 
-    section("Color Modifications", COLOR_MODIFICATIONS);
+    section(COLOR_MODIFICATIONS);
     testNegate();
-    // testGrayscale();
-    // testEdgeDetection();
+    testGrayscale();
+    testEdgeDetection();
+
+    section(ORIENTATION_MODIFICATIONS);
+    testMirrorVertical();
     // testFaceDetect();
     // testFixUnderwater();
-    // testMirrorVertical();
-    // testMirrorTemple();
     // testMirrorArms();
     // testMirrorGull();
     // testMirrorDiagonal();
-    // testCollage();
     // testCopy();
+
+    section(MISC);
+    testCollage();
+    testGetAverageForColumn();
+    testGetAverageForRow();
+    testGetCountColorsOverValue();
 
     // testChromakey();
     // testEncodeAndDecode();  // use png, gif or bmp because of compression
-    // testGetCountRedOverValue(250);
     // testSetRedToHalfValueInTopHalf();
     // testClearBlueOverValue(200);
-    // Color avgColor = testGetAverageForColumn(pic, col);// specified column
+    System.out.println("-----");
+  }
+
+  static String getRandomImage() {
+    int random = (int) (PICS.length * Math.random());
+    return PICS_INPUT + PICS[random];
   }
 
   static boolean deleteDirectory() {
@@ -73,10 +86,30 @@ public class PictureTester {
     return dir.delete();
   }
 
-  public static void section(String title, String folder) {
-    System.out.println("\n-----");
-    System.out.println(title + "\n");
+  public static void section(String folder) {
+    section(folder, false);
+  }
+
+  public static void section(String folder, boolean first) {
+    String[] words = folder.replaceAll("-", " ").replaceAll("/", "").split("\\s");
+    for(int i = 0; i < words.length; i++) {
+      String word = words[i];
+      words[i] = word.substring(0,1).toUpperCase() + word.substring(1);
+    }
+
+    String title = String.join(" ", words);
+    if(!first) {
+      System.out.println("-----");
+      System.out.println();
+    }
+    System.out.println("-----");
+    System.out.println("\u001b[1m\u001b[7m" + title + "\u001b[0m");
     new File(PICS_OUTPUT + folder).mkdirs();
+  }
+
+  public static void test(String testName) {
+    System.out.println();
+    System.out.println("\u001b[34;1mTesting " + testName + "!\u001b[0m");
   }
 
   public static void writeImage(Picture pic, String path) {
@@ -86,14 +119,12 @@ public class PictureTester {
   }
 
   public static void testZeroBlue() {
-    System.out.println("Testing Zero Blue!");
+    test("Zero Blue");
     Picture pic = new Picture(IMAGE);
 
-    Pixel[][] pixels = pic.getPixels2D();
-    for (Pixel[] rowArray : pixels) {
-      for (Pixel pixelObj : rowArray) {
-        pixelObj.setBlue(0);
-      }
+    Pixel[] pixels = pic.getPixels();
+    for (Pixel pixel : pixels) {
+      pixel.setBlue(0);
     }
 
     String title = "zero-blue.jpg";
@@ -102,14 +133,12 @@ public class PictureTester {
   }
 
   public static void testZeroGreen() {
-    System.out.println("Testing Zero Green!");
+    test("Zero Green");
     Picture pic = new Picture(IMAGE);
 
-    Pixel[][] pixels = pic.getPixels2D();
-    for (Pixel[] rowArray : pixels) {
-      for (Pixel pixelObj : rowArray) {
-        pixelObj.setGreen(0);
-      }
+    Pixel[] pixels = pic.getPixels();
+    for (Pixel pixel : pixels) {
+      pixel.setGreen(0);
     }
 
     String title = "zero-green.jpg";
@@ -118,14 +147,12 @@ public class PictureTester {
   }
 
   public static void testZeroRed() {
-    System.out.println("Testing Zero Red!");
+    test("Zero Red");
     Picture pic = new Picture(IMAGE);
 
-    Pixel[][] pixels = pic.getPixels2D();
-    for (Pixel[] rowArray : pixels) {
-      for (Pixel pixelObj : rowArray) {
-        pixelObj.setRed(0);
-      }
+    Pixel[] pixels = pic.getPixels();
+    for (Pixel pixel : pixels) {
+      pixel.setRed(0);
     }
 
     String title = "zero-red.jpg";
@@ -134,16 +161,15 @@ public class PictureTester {
   }
 
   private static void testKeepOnlyBlue() {
-    System.out.println("Testing Keep Only Blue!");
+    test("Keep Only Blue");
     Picture pic = new Picture(IMAGE);
 
-    Pixel[][] pixels = pic.getPixels2D();
-    for (Pixel[] rowArray : pixels) {
-      for (Pixel pixelObj : rowArray) {
-        pixelObj.setGreen(0);
-        pixelObj.setRed(0);
-      }
+    Pixel[] pixels = pic.getPixels();
+    for (Pixel pixel : pixels) {
+      pixel.setGreen(0);
+      pixel.setRed(0);
     }
+
 
     String title = "only-blue.jpg";
 
@@ -151,15 +177,13 @@ public class PictureTester {
   }
 
   private static void testKeepOnlyGreen() {
-    System.out.println("Testing Keep Only Green!");
+    test("Keep Only Green");
     Picture pic = new Picture(IMAGE);
 
-    Pixel[][] pixels = pic.getPixels2D();
-    for (Pixel[] rowArray : pixels) {
-      for (Pixel pixelObj : rowArray) {
-        pixelObj.setBlue(0);
-        pixelObj.setRed(0);
-      }
+    Pixel[] pixels = pic.getPixels();
+    for (Pixel pixel : pixels) {
+      pixel.setBlue(0);
+      pixel.setRed(0);
     }
 
     String title = "only-green.jpg";
@@ -168,15 +192,13 @@ public class PictureTester {
   }
 
   private static void testKeepOnlyRed() {
-    System.out.println("Testing Keep Only Red!");
+    test("Keep Only Red");
     Picture pic = new Picture(IMAGE);
 
-    Pixel[][] pixels = pic.getPixels2D();
-    for (Pixel[] rowArray : pixels) {
-      for (Pixel pixelObj : rowArray) {
-        pixelObj.setGreen(0);
-        pixelObj.setBlue(0);
-      }
+    Pixel[] pixels = pic.getPixels();
+    for (Pixel pixel : pixels) {
+      pixel.setGreen(0);
+      pixel.setBlue(0);
     }
 
     String title = "only-red.jpg";
@@ -185,7 +207,7 @@ public class PictureTester {
   }
 
   private static void testNegate() {
-    System.out.println("Testing Negate!");
+    test("Negate");
     Picture pic = new Picture(IMAGE);
     pic.negate();
 
@@ -193,107 +215,83 @@ public class PictureTester {
     writeImage(pic, COLOR_MODIFICATIONS + title);
   }
 
-  /**
-   * Again, like the method above, this is pretty common, so let's add this method to the
-   * Picture class.
-   */
   private static void testGrayscale() {
-    Picture swan = new Picture("swan.jpg");
-    // write this method in Picture class
-    swan.grayScale();
-    swan.explore();
+    test("Grayscale");
+    Picture pic = new Picture(IMAGE);
+    pic.grayscale();
+
+    String title = "grayscale.jpg";
+    writeImage(pic, COLOR_MODIFICATIONS + title);
   }
 
-  /**
-   * Method to test edgeDetection
-   */
   public static void testEdgeDetection() {
+    test("Edge Detection");
+    Picture pic = new Picture(IMAGE);
+    pic.edgeDetection(20);
 
-    Picture swan = new Picture("swan.jpg");
-
-    // written in Picture class
-    swan.edgeDetection(10);
-    swan.explore();
-    swan.write("swan outline.jpg");// writes the new picture to a new file
+    String title = "edge-detection.jpg";
+    writeImage(pic, COLOR_MODIFICATIONS + title);
   }
 
-  /**
-   * Method to test mirrorVertical
-   */
   public static void testMirrorVertical() {
-    Picture caterpillar = new Picture("caterpillar.jpg");
-    caterpillar.explore();
-    // this should take the left-hand half of the picture and reflect it across
-    // the vertical midline.
-    caterpillar.mirrorVertical();// need to write this method in the picture class
-    caterpillar.explore();
+    test("Mirror Vertical");
+    Picture pic = new Picture(IMAGE);
+    pic.mirrorVertical();
+
+    String title = "mirror-vertical.jpg";
+    writeImage(pic, ORIENTATION_MODIFICATIONS + title);
   }
 
-  /**
-   * Method to test mirrorTemple
-   */
-  public static void testMirrorTemple() {
-    Picture temple = new Picture("temple.jpg");
-    temple.explore();
-    // This method makes a mirror image of a section of this picture
-    // If this picture is of the temple, it mirror images the top.
-    // what if this picture is of a different image?
-    int mirrorPoint = 276;
-    Pixel leftPixel = null;
-    Pixel rightPixel = null;
-
-    // this method creates a mirror image for a section of its
-    // pixels.  What would happen if we used a different starting
-    // image?  Is mirrorTemple a useful method in the long run?  How
-    // could you change it so that it would be more useful?
-    Pixel[][] pixels = temple.getPixels2D();
-
-    // loop through the rows
-    for (int row = 27; row < 97; row++) {
-      // loop from 13 to just before the mirror point
-      for (int col = 13; col < mirrorPoint; col++) {
-
-        leftPixel = pixels[row][col];
-        rightPixel = pixels[row]
-          [mirrorPoint - col + mirrorPoint];
-        rightPixel.setColor(leftPixel.getColor());
-      }
-    }
-
-
-    temple.explore();
-  }
-
-  /**
-   * Method to test the collage method
-   */
   public static void testCollage() {
-    Picture canvas = new Picture("640x480.jpg");
-    canvas.createCollage();// this method has been written in the Picture class
-    // how can it be changed so that we could pass in
-    // pictures that could be added to a collage?
-    canvas.explore();
+    test("Collage");
+    Picture pic = new Picture(PICS_INPUT + "640x480.jpg");
+
+    String[] pictures = new String[10];
+    for (int i = 0; i < pictures.length; i++) {
+      pictures[i] = getRandomImage();
+    }
+    pic.createCollage(pictures);
+
+    String title = "collage.jpg";
+    writeImage(pic, MISC + title);
   }
 
+  private static void testGetAverageForColumn() {
+    test("Get Average For Column");
+    Picture pic = new Picture(IMAGE);
+    int col = (int) (Math.random() * pic.getWidth());
 
-  /*so, you have a choice for this one and the methods that follow.  You can write the
-   * code in the methods below or you can add functionality to the picture class.  Sometimes
-   * it makes sense to add it to the class for reusability reasons.  Sometimes it is too unique
-   * a need to add to the class.
-   */
+    Color avg = pic.getAverageForColumn(col);
+    System.out.println("Average Color for column " + col + " was " + avg);
+  }
 
-  // So, you can create a Picture Object and find the average value of
-  // the component in that column
-  private static Color testGetAverageForColumn(Picture pic, int col) {
-    Color avg = null;
+  private static void testGetAverageForRow() {
+    test("Get Average For Row");
+    Picture pic = new Picture(IMAGE);
+    int row = (int) (Math.random() * pic.getHeight());
 
-    return avg;
+    Color avg = pic.getAverageForRow(row);
+    System.out.println("Average Color for row " + row + " was " + avg);
+  }
+
+  private static void testGetCountColorsOverValue() {
+    test("Get Count Colors Over Value");
+    Picture pic = new Picture(IMAGE);
+
+    int value = (int) (Math.random() * 256);
+
+    int redCount = pic.getCountColorOverValue("red", value);
+    int greenCount = pic.getCountColorOverValue("green", value);
+    int blueCount = pic.getCountColorOverValue("blue", value);
+
+    System.out.println("Number of pixels with red value over " + value + " was " + redCount);
+    System.out.println("Number of pixels with green value over " + value + " was " + greenCount);
+    System.out.println("Number of pixels with blue value over " + value + " was " + blueCount);
   }
 
   // so for this one, any pixels that have blue over a certain value are set
   // to no blue at all.  Or for a different effect, have those pixels set to black.
   private static void testClearBlueOverValue(int i) {
-
 
   }
 
@@ -301,15 +299,8 @@ public class PictureTester {
   // So, bottom half of pic should look normal
   private static void testSetRedToHalfValueInTopHalf() {
 
-
   }
 
-  // displays the number of pixels in the pic that have a red component
-  // greater than the specifies int.
-  private static void testGetCountRedOverValue(int i) {
-
-
-  }
 
   /**
    * The method below is really cool!!  Use the following approach:

@@ -278,17 +278,15 @@ public class PictureTester {
     test("Get Count Colors Over Value");
     Picture pic = new Picture(IMAGE);
 
-    int red = (int) (Math.random() * 256);
-    int green = (int) (Math.random() * 256);
-    int blue = (int) (Math.random() * 256);
+    int value = (int) (Math.random() * 256);
 
-    int redCount = pic.getCountColorOverValue("red", red);
-    int greenCount = pic.getCountColorOverValue("green", green);
-    int blueCount = pic.getCountColorOverValue("blue", blue);
+    int redCount = pic.getCountColorOverValue("red", value);
+    int greenCount = pic.getCountColorOverValue("green", value);
+    int blueCount = pic.getCountColorOverValue("blue", value);
 
-    System.out.println("Number of pixels with red value over " + red + " was " + redCount);
-    System.out.println("Number of pixels with green value over " + red + " was " + greenCount);
-    System.out.println("Number of pixels with blue value over " + red + " was " + blueCount);
+    System.out.println("Number of pixels with red value over " + value + " was " + redCount);
+    System.out.println("Number of pixels with green value over " + value + " was " + greenCount);
+    System.out.println("Number of pixels with blue value over " + value + " was " + blueCount);
   }
 
   // so for this one, any pixels that have blue over a certain value are set

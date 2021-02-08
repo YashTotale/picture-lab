@@ -28,10 +28,9 @@ public class PictureTester {
 
 
   public static void main(String[] args) {
-    System.out.println("Testing Picture");
     deleteDirectory();
 
-    section(ZERO_COLORS);
+    section(ZERO_COLORS, true);
     testZeroBlue();
     testZeroGreen();
     testZeroRed();
@@ -65,6 +64,7 @@ public class PictureTester {
     // testEncodeAndDecode();  // use png, gif or bmp because of compression
     // testSetRedToHalfValueInTopHalf();
     // testClearBlueOverValue(200);
+    System.out.println("-----");
   }
 
   static String getRandomImage() {
@@ -87,6 +87,10 @@ public class PictureTester {
   }
 
   public static void section(String folder) {
+    section(folder, false);
+  }
+
+  public static void section(String folder, boolean first) {
     String[] words = folder.replaceAll("-", " ").replaceAll("/", "").split("\\s");
     for(int i = 0; i < words.length; i++) {
       String word = words[i];
@@ -94,9 +98,18 @@ public class PictureTester {
     }
 
     String title = String.join(" ", words);
-    System.out.println("\n-----");
-    System.out.println(title + "\n");
+    if(!first) {
+      System.out.println("-----");
+      System.out.println();
+    }
+    System.out.println("-----");
+    System.out.println("\u001b[1m\u001b[7m" + title + "\u001b[0m");
     new File(PICS_OUTPUT + folder).mkdirs();
+  }
+
+  public static void test(String testName) {
+    System.out.println();
+    System.out.println("\u001b[34;1mTesting " + testName + "!\u001b[0m");
   }
 
   public static void writeImage(Picture pic, String path) {
@@ -106,7 +119,7 @@ public class PictureTester {
   }
 
   public static void testZeroBlue() {
-    System.out.println("Testing Zero Blue!");
+    test("Zero Blue");
     Picture pic = new Picture(IMAGE);
 
     Pixel[] pixels = pic.getPixels();
@@ -120,7 +133,7 @@ public class PictureTester {
   }
 
   public static void testZeroGreen() {
-    System.out.println("Testing Zero Green!");
+    test("Zero Green");
     Picture pic = new Picture(IMAGE);
 
     Pixel[] pixels = pic.getPixels();
@@ -134,7 +147,7 @@ public class PictureTester {
   }
 
   public static void testZeroRed() {
-    System.out.println("Testing Zero Red!");
+    test("Zero Red");
     Picture pic = new Picture(IMAGE);
 
     Pixel[] pixels = pic.getPixels();
@@ -148,7 +161,7 @@ public class PictureTester {
   }
 
   private static void testKeepOnlyBlue() {
-    System.out.println("Testing Keep Only Blue!");
+    test("Keep Only Blue");
     Picture pic = new Picture(IMAGE);
 
     Pixel[] pixels = pic.getPixels();
@@ -164,7 +177,7 @@ public class PictureTester {
   }
 
   private static void testKeepOnlyGreen() {
-    System.out.println("Testing Keep Only Green!");
+    test("Keep Only Green");
     Picture pic = new Picture(IMAGE);
 
     Pixel[] pixels = pic.getPixels();
@@ -179,7 +192,7 @@ public class PictureTester {
   }
 
   private static void testKeepOnlyRed() {
-    System.out.println("Testing Keep Only Red!");
+    test("Keep Only Red");
     Picture pic = new Picture(IMAGE);
 
     Pixel[] pixels = pic.getPixels();
@@ -194,7 +207,7 @@ public class PictureTester {
   }
 
   private static void testNegate() {
-    System.out.println("Testing Negate!");
+    test("Negate");
     Picture pic = new Picture(IMAGE);
     pic.negate();
 
@@ -203,7 +216,7 @@ public class PictureTester {
   }
 
   private static void testGrayscale() {
-    System.out.println("Testing Grayscale!");
+    test("Grayscale");
     Picture pic = new Picture(IMAGE);
     pic.grayscale();
 
@@ -212,7 +225,7 @@ public class PictureTester {
   }
 
   public static void testEdgeDetection() {
-    System.out.println("Testing Edge Detection!");
+    test("Edge Detection");
     Picture pic = new Picture(IMAGE);
     pic.edgeDetection(20);
 
@@ -221,7 +234,7 @@ public class PictureTester {
   }
 
   public static void testMirrorVertical() {
-    System.out.println("Testing Mirror Vertical!");
+    test("Mirror Vertical");
     Picture pic = new Picture(IMAGE);
     pic.mirrorVertical();
 
@@ -230,7 +243,7 @@ public class PictureTester {
   }
 
   public static void testCollage() {
-    System.out.println("Testing Collage!");
+    test("Collage");
     Picture pic = new Picture(PICS_INPUT + "640x480.jpg");
 
     String[] pictures = new String[10];
@@ -244,7 +257,7 @@ public class PictureTester {
   }
 
   private static void testGetAverageForColumn() {
-    System.out.println("Testing Get Average For Column!");
+    test("Get Average For Column");
     Picture pic = new Picture(IMAGE);
     int col = (int) (Math.random() * pic.getWidth());
 
@@ -253,7 +266,7 @@ public class PictureTester {
   }
 
   private static void testGetAverageForRow() {
-    System.out.println("Testing Get Average For Row!");
+    test("Get Average For Row");
     Picture pic = new Picture(IMAGE);
     int row = (int) (Math.random() * pic.getHeight());
 
@@ -262,7 +275,7 @@ public class PictureTester {
   }
 
   private static void testGetCountColorsOverValue() {
-    System.out.println("Testing Get Count Colors Over Value!");
+    test("Get Count Colors Over Value");
     Picture pic = new Picture(IMAGE);
 
     int red = (int) (Math.random() * 256);

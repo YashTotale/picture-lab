@@ -75,7 +75,7 @@ public class Picture extends SimplePicture {
   }
 
   public void negate() {
-    Pixel[] pixels = super.getPixels();
+    Pixel[] pixels = this.getPixels();
 
     for (Pixel pixel : pixels) {
       pixel.setBlue(255 - pixel.getBlue());
@@ -85,7 +85,7 @@ public class Picture extends SimplePicture {
   }
 
   public void grayscale() {
-    Pixel[] pixels = super.getPixels();
+    Pixel[] pixels = this.getPixels();
 
     for (Pixel pixel : pixels) {
       int gray = (int) pixel.getAverage();

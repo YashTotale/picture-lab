@@ -26,12 +26,11 @@ public class PictureTester {
   public static final String ORIENTATION_MODIFICATIONS = "orientation-modifications/";
   public static final String MISC = "misc/";
 
-
   public static void main(String[] args) {
     deleteDirectory();
     writeImage(new Picture(IMAGE), "original.jpg");
 
-    section(ZERO_COLORS, true);
+    section(ZERO_COLORS, true, true);
     testZeroRed();
     testZeroGreen();
     testZeroBlue();
@@ -68,15 +67,27 @@ public class PictureTester {
     System.out.println("-----");
   }
 
+  /**
+   * @return A random image from PICS
+   */
   private static String getRandomImage() {
+    assert PICS != null;
     int random = (int) (PICS.length * Math.random());
     return PICS_INPUT + PICS[random];
   }
 
+  /**
+   * Deletes the 'processed' folder recursively
+   * @return True if successfully deleted; false otherwise
+   */
   private static boolean deleteDirectory() {
     return deleteDirectory(new File(PICS_OUTPUT));
   }
 
+  /**
+   * @param dir The directory to recursively delete
+   * @return True if successfully deleted; false otherwise
+   */
   private static boolean deleteDirectory(File dir) {
     File[] allContents = dir.listFiles();
     if (allContents != null) {
@@ -87,28 +98,40 @@ public class PictureTester {
     return dir.delete();
   }
 
+  /**
+   * @param str The string to capitalize
+   * @return The capitalized string
+   */
   private static String capitalize(String str) {
     return str.substring(0, 1).toUpperCase() + str.substring(1);
   }
 
   private static void section(String folder) {
-    section(folder, false);
+    section(folder, false, true);
   }
 
-  private static void section(String folder, boolean first) {
+  private static void section(String folder, boolean first, boolean createFolder) {
+    // Remove unnecessary chars like "-" and "/" and split the string into an array of words
     String[] words = folder.replaceAll("-", " ").replaceAll("/", "").split("\\s");
+
     for (int i = 0; i < words.length; i++) {
+      // Capitalize each word
       words[i] = capitalize(words[i]);
     }
 
+    // Turn the array back into a string
     String title = String.join(" ", words);
+
     if(!first) {
       System.out.println("-----");
       System.out.println();
     }
     System.out.println("-----");
+    // Print the formatted title in Reversed colors
     System.out.println("\u001b[1m\u001b[7m" + title + "\u001b[0m");
-    new File(PICS_OUTPUT + folder).mkdirs();
+
+    // Create a folder in the 'processed' folder
+    if(createFolder) new File(PICS_OUTPUT + folder).mkdirs();
   }
 
   private static void test(String testName) {
@@ -453,3 +476,4 @@ public class PictureTester {
 
   }
 }
+

@@ -32,14 +32,14 @@ public class PictureTester {
     writeImage(new Picture(IMAGE), "original.jpg");
 
     section(ZERO_COLORS, true);
-    testZeroBlue();
-    testZeroGreen();
     testZeroRed();
+    testZeroGreen();
+    testZeroBlue();
 
     section(ONE_COLOR);
-    testKeepOnlyBlue();
     testKeepOnlyRed();
     testKeepOnlyGreen();
+    testKeepOnlyBlue();
 
     section(COLOR_MODIFICATIONS);
     testNegate();
@@ -68,16 +68,16 @@ public class PictureTester {
     System.out.println("-----");
   }
 
-  static String getRandomImage() {
+  private static String getRandomImage() {
     int random = (int) (PICS.length * Math.random());
     return PICS_INPUT + PICS[random];
   }
 
-  static boolean deleteDirectory() {
+  private static boolean deleteDirectory() {
     return deleteDirectory(new File(PICS_OUTPUT));
   }
 
-  static boolean deleteDirectory(File dir) {
+  private static boolean deleteDirectory(File dir) {
     File[] allContents = dir.listFiles();
     if (allContents != null) {
       for (File file : allContents) {
@@ -87,15 +87,18 @@ public class PictureTester {
     return dir.delete();
   }
 
-  public static void section(String folder) {
+  private static String capitalize(String str) {
+    return str.substring(0, 1).toUpperCase() + str.substring(1);
+  }
+
+  private static void section(String folder) {
     section(folder, false);
   }
 
-  public static void section(String folder, boolean first) {
+  private static void section(String folder, boolean first) {
     String[] words = folder.replaceAll("-", " ").replaceAll("/", "").split("\\s");
-    for(int i = 0; i < words.length; i++) {
-      String word = words[i];
-      words[i] = word.substring(0,1).toUpperCase() + word.substring(1);
+    for (int i = 0; i < words.length; i++) {
+      words[i] = capitalize(words[i]);
     }
 
     String title = String.join(" ", words);
@@ -108,107 +111,99 @@ public class PictureTester {
     new File(PICS_OUTPUT + folder).mkdirs();
   }
 
-  public static void test(String testName) {
+  private static void test(String testName) {
     System.out.println();
     System.out.println("\u001b[34;1mTesting " + testName + "!\u001b[0m");
   }
 
-  public static void writeImage(Picture pic, String path) {
+  private static void writeImage(Picture pic, String path) {
     new File(PICS_OUTPUT).mkdirs();
     path = PICS_OUTPUT + path;
     pic.write(path);
     System.out.println("Wrote to: " + path);
   }
 
-  public static void testZeroBlue() {
-    test("Zero Blue");
+  private static void testZeroColors(String color) {
+    test("Zero " + capitalize(color));
     Picture pic = new Picture(IMAGE);
 
     Pixel[] pixels = pic.getPixels();
     for (Pixel pixel : pixels) {
-      pixel.setBlue(0);
+      switch (color) {
+        case "red": {
+          pixel.setRed(0);
+          break;
+        }
+        case "green": {
+          pixel.setGreen(0);
+          break;
+        }
+        case "blue": {
+          pixel.setBlue(0);
+          break;
+        }
+      }
     }
 
-    String title = "zero-blue.jpg";
-
-    writeImage(pic, ZERO_COLORS + title);
-  }
-
-  public static void testZeroGreen() {
-    test("Zero Green");
-    Picture pic = new Picture(IMAGE);
-
-    Pixel[] pixels = pic.getPixels();
-    for (Pixel pixel : pixels) {
-      pixel.setGreen(0);
-    }
-
-    String title = "zero-green.jpg";
-
+    String title = "zero-" + color + ".jpg";
     writeImage(pic, ZERO_COLORS + title);
   }
 
   public static void testZeroRed() {
-    test("Zero Red");
-    Picture pic = new Picture(IMAGE);
-
-    Pixel[] pixels = pic.getPixels();
-    for (Pixel pixel : pixels) {
-      pixel.setRed(0);
-    }
-
-    String title = "zero-red.jpg";
-
-    writeImage(pic, ZERO_COLORS + title);
+    testZeroColors("red");
   }
 
-  private static void testKeepOnlyBlue() {
-    test("Keep Only Blue");
+  public static void testZeroGreen() {
+    testZeroColors("green");
+  }
+
+  public static void testZeroBlue() {
+    testZeroColors("blue");
+  }
+
+  private static void testKeepOnlyColor(String color) {
+    test("Keep Only " + capitalize(color));
     Picture pic = new Picture(IMAGE);
 
     Pixel[] pixels = pic.getPixels();
     for (Pixel pixel : pixels) {
-      pixel.setGreen(0);
-      pixel.setRed(0);
+      switch (color) {
+        case "red": {
+          pixel.setGreen(0);
+          pixel.setBlue(0);
+          break;
+        }
+        case "green": {
+          pixel.setRed(0);
+          pixel.setBlue(0);
+          break;
+        }
+        case "blue": {
+          pixel.setRed(0);
+          pixel.setGreen(0);
+          break;
+        }
+      }
     }
 
-
-    String title = "only-blue.jpg";
-
+    String title = "only-" + color + ".jpg";
     writeImage(pic, ONE_COLOR + title);
   }
 
-  private static void testKeepOnlyGreen() {
-    test("Keep Only Green");
-    Picture pic = new Picture(IMAGE);
 
-    Pixel[] pixels = pic.getPixels();
-    for (Pixel pixel : pixels) {
-      pixel.setBlue(0);
-      pixel.setRed(0);
-    }
-
-    String title = "only-green.jpg";
-
-    writeImage(pic, ONE_COLOR + title);
+  public static void testKeepOnlyRed() {
+    testKeepOnlyColor("red");
   }
 
-  private static void testKeepOnlyRed() {
-    test("Keep Only Red");
-    Picture pic = new Picture(IMAGE);
-
-    Pixel[] pixels = pic.getPixels();
-    for (Pixel pixel : pixels) {
-      pixel.setGreen(0);
-      pixel.setBlue(0);
-    }
-
-    String title = "only-red.jpg";
-
-    writeImage(pic, ONE_COLOR + title);
+  public static void testKeepOnlyGreen() {
+    testKeepOnlyColor("green");
   }
 
-  private static void testNegate() {
+  public static void testKeepOnlyBlue() {
+    testKeepOnlyColor("blue");
+  }
+
+  public static void testNegate() {
     test("Negate");
     Picture pic = new Picture(IMAGE);
     pic.negate();
@@ -217,7 +212,7 @@ public class PictureTester {
     writeImage(pic, COLOR_MODIFICATIONS + title);
   }
 
-  private static void testGrayscale() {
+  public static void testGrayscale() {
     test("Grayscale");
     Picture pic = new Picture(IMAGE);
     pic.grayscale();

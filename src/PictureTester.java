@@ -54,11 +54,15 @@ public class PictureTester {
     // testMirrorDiagonal();
     // testCopy();
 
+    section("Count Color", false, false);
+    testGetCountRedOverValue();
+    testGetCountGreenOverValue();
+    testGetCountBlueOverValue();
+
     section(MISC);
     testCollage();
     testGetAverageForColumn();
     testGetAverageForRow();
-    testGetCountColorsOverValue();
     testClearColorsOverValue();
 
     // testChromakey();
@@ -294,19 +298,27 @@ public class PictureTester {
     System.out.println("Average Color for row " + row + " was " + avg);
   }
 
-  private static void testGetCountColorsOverValue() {
-    test("Get Count Colors Over Value");
+  private static void testGetCountColorOverValue(String color) {
+    test("Get Count " + capitalize(color) + " Over Value");
     Picture pic = new Picture(IMAGE);
 
     int value = (int) (Math.random() * 256);
 
-    int redCount = pic.getCountColorOverValue("red", value);
-    int greenCount = pic.getCountColorOverValue("green", value);
-    int blueCount = pic.getCountColorOverValue("blue", value);
+    int count = pic.getCountColorOverValue(color, value);
 
-    System.out.println("Number of pixels with red value over " + value + " was " + redCount);
-    System.out.println("Number of pixels with green value over " + value + " was " + greenCount);
-    System.out.println("Number of pixels with blue value over " + value + " was " + blueCount);
+    System.out.println("Number of pixels with " + color + " value over " + value + " was " + count);
+  }
+
+  private static void testGetCountRedOverValue() {
+    testGetCountColorOverValue("red");
+  }
+
+  private static void testGetCountGreenOverValue() {
+    testGetCountColorOverValue("green");
+  }
+
+  private static void testGetCountBlueOverValue() {
+    testGetCountColorOverValue("blue");
   }
 
   private static void testClearColorsOverValue() {

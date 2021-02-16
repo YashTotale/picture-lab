@@ -24,6 +24,7 @@ public class PictureTester {
   public static final String ONE_COLOR = "one-color/";
   public static final String COLOR_MODIFICATIONS = "color-modifications/";
   public static final String ORIENTATION_MODIFICATIONS = "orientation-modifications/";
+  public static final String CLEAR_COLOR = "clear-color/";
   public static final String MISC = "misc/";
 
   public static void main(String[] args) {
@@ -54,6 +55,11 @@ public class PictureTester {
     // testMirrorDiagonal();
     // testCopy();
 
+    section(CLEAR_COLOR);
+    testClearRedOverValue();
+    testClearGreenOverValue();
+    testClearBlueOverValue();
+
     section("Count Color", false, false);
     testGetCountRedOverValue();
     testGetCountGreenOverValue();
@@ -63,7 +69,6 @@ public class PictureTester {
     testCollage();
     testGetAverageForColumn();
     testGetAverageForRow();
-    testClearColorsOverValue();
 
     // testChromakey();
     // testEncodeAndDecode();  // use png, gif or bmp because of compression
@@ -257,6 +262,29 @@ public class PictureTester {
     writeImage(pic, COLOR_MODIFICATIONS + title);
   }
 
+  private static void testClearColorOverValue(String color) {
+    test("Clear " + capitalize(color) + " Over Value");
+    int value = (int) (Math.random() * 256);
+
+    Picture pic = new Picture(IMAGE);
+
+    pic.clearColorOverValue(color, value);
+
+    writeImage(pic, CLEAR_COLOR + "clear-" + color + "-over-" + value + ".jpg");
+  }
+
+  public static void testClearRedOverValue() {
+    testClearColorOverValue("red");
+  }
+
+  public static void testClearGreenOverValue() {
+    testClearColorOverValue("green");
+  }
+
+  public static void testClearBlueOverValue() {
+    testClearColorOverValue("blue");
+  }
+
   public static void testMirrorVertical() {
     test("Mirror Vertical");
     Picture pic = new Picture(IMAGE);
@@ -280,7 +308,7 @@ public class PictureTester {
     writeImage(pic, MISC + title);
   }
 
-  private static void testGetAverageForColumn() {
+  public static void testGetAverageForColumn() {
     test("Get Average For Column");
     Picture pic = new Picture(IMAGE);
     int col = (int) (Math.random() * pic.getWidth());
@@ -289,7 +317,7 @@ public class PictureTester {
     System.out.println("Average Color for column " + col + " was " + avg);
   }
 
-  private static void testGetAverageForRow() {
+  public static void testGetAverageForRow() {
     test("Get Average For Row");
     Picture pic = new Picture(IMAGE);
     int row = (int) (Math.random() * pic.getHeight());
@@ -309,33 +337,16 @@ public class PictureTester {
     System.out.println("Number of pixels with " + color + " value over " + value + " was " + count);
   }
 
-  private static void testGetCountRedOverValue() {
+  public static void testGetCountRedOverValue() {
     testGetCountColorOverValue("red");
   }
 
-  private static void testGetCountGreenOverValue() {
+  public static void testGetCountGreenOverValue() {
     testGetCountColorOverValue("green");
   }
 
-  private static void testGetCountBlueOverValue() {
+  public static void testGetCountBlueOverValue() {
     testGetCountColorOverValue("blue");
-  }
-
-  private static void testClearColorsOverValue() {
-    test("Clear Colors Over Value");
-    int value = (int) (Math.random() * 256);
-
-    Picture redPic = new Picture(IMAGE);
-    Picture greenPic = new Picture(IMAGE);
-    Picture bluePic = new Picture(IMAGE);
-
-    redPic.clearColorOverValue("red", value);
-    greenPic.clearColorOverValue("green", value);
-    bluePic.clearColorOverValue("blue", value);
-
-    writeImage(redPic, MISC + "clear-red-over-" + value + ".jpg");
-    writeImage(greenPic, MISC + "clear-green-over-" + value + ".jpg");
-    writeImage(bluePic, MISC + "clear-blue-over-" + value + ".jpg");
   }
 
   // goes to each pixel in the top half and cuts the red component in half

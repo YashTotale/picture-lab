@@ -19,6 +19,7 @@ public class PictureTester {
   public static final String[] PICS = new File(PICS_INPUT).list();
 
   public static final String IMAGE = getRandomImage();
+  public static final String IMAGE_ENDING = IMAGE.substring(IMAGE.lastIndexOf('.'));
 
   public static final String ZERO_COLORS = "zero-colors/";
   public static final String ONE_COLOR = "one-color/";
@@ -29,7 +30,7 @@ public class PictureTester {
 
   public static void main(String[] args) {
     deleteDirectory();
-    writeImage(new Picture(IMAGE), "original.jpg");
+    writeImage(new Picture(IMAGE), "original");
 
     section(ZERO_COLORS, true, true);
     testZeroRed();
@@ -66,6 +67,7 @@ public class PictureTester {
     testGetCountBlueOverValue();
 
     section(MISC);
+    testPixelate();
     testCollage();
     testGetAverageForColumn();
     testGetAverageForRow();
@@ -149,8 +151,12 @@ public class PictureTester {
   }
 
   private static void writeImage(Picture pic, String path) {
+    writeImage(pic, path, true);
+  }
+
+  private static void writeImage(Picture pic, String path, boolean addEnding) {
     new File(PICS_OUTPUT).mkdirs();
-    path = PICS_OUTPUT + path;
+    path = PICS_OUTPUT + path + (addEnding ? IMAGE_ENDING : "");
     pic.write(path);
     System.out.println("Wrote to: " + path);
   }
@@ -177,7 +183,7 @@ public class PictureTester {
       }
     }
 
-    String title = "zero-" + color + ".jpg";
+    String title = "zero-" + color;
     writeImage(pic, ZERO_COLORS + title);
   }
 
@@ -218,7 +224,7 @@ public class PictureTester {
       }
     }
 
-    String title = "only-" + color + ".jpg";
+    String title = "only-" + color;
     writeImage(pic, ONE_COLOR + title);
   }
 
@@ -240,7 +246,7 @@ public class PictureTester {
     Picture pic = new Picture(IMAGE);
     pic.negate();
 
-    String title = "negate.jpg";
+    String title = "negate";
     writeImage(pic, COLOR_MODIFICATIONS + title);
   }
 
@@ -249,7 +255,7 @@ public class PictureTester {
     Picture pic = new Picture(IMAGE);
     pic.grayscale();
 
-    String title = "grayscale.jpg";
+    String title = "grayscale";
     writeImage(pic, COLOR_MODIFICATIONS + title);
   }
 
@@ -258,7 +264,7 @@ public class PictureTester {
     Picture pic = new Picture(IMAGE);
     pic.edgeDetection(20);
 
-    String title = "edge-detection.jpg";
+    String title = "edge-detection";
     writeImage(pic, COLOR_MODIFICATIONS + title);
   }
 
@@ -270,7 +276,7 @@ public class PictureTester {
 
     pic.clearColorOverValue(color, value);
 
-    writeImage(pic, CLEAR_COLOR + "clear-" + color + "-over-" + value + ".jpg");
+    writeImage(pic, CLEAR_COLOR + "clear-" + color + "-over-" + value);
   }
 
   public static void testClearRedOverValue() {
@@ -290,8 +296,17 @@ public class PictureTester {
     Picture pic = new Picture(IMAGE);
     pic.mirrorVertical();
 
-    String title = "mirror-vertical.jpg";
+    String title = "mirror-vertical";
     writeImage(pic, ORIENTATION_MODIFICATIONS + title);
+  }
+
+  public static void testPixelate() {
+    test("Pixelate");
+    Picture pic = new Picture(IMAGE);
+    pic.pixelate(15);
+
+    String title = "pixelate";
+    writeImage(pic, MISC + title);
   }
 
   public static void testCollage() {
@@ -305,7 +320,7 @@ public class PictureTester {
     pic.createCollage(pictures);
 
     String title = "collage.jpg";
-    writeImage(pic, MISC + title);
+    writeImage(pic, MISC + title, false);
   }
 
   public static void testGetAverageForColumn() {

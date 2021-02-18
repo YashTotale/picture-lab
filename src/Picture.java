@@ -177,11 +177,42 @@ public class Picture extends SimplePicture {
   }
 
 
-  public void pixelate() {
+  public void pixelate(int blockSize) {
     Pixel[][] pixels = this.getPixels2D();
-    for(int r = 0; r < pixels.length; r += 2) {
-      for(int c = 0; c < pixels[r].length; c++) {
+    int width = pixels.length; // Don't use this.getWidth() because it doesnt work sometimes
+    int height = pixels[0].length; // Don't use this.getHeight() because it doesnt work sometimes
 
+    int vertNum = (int) Math.ceil(1.0 * width / blockSize);
+    int horNum = (int) Math.ceil(1.0 * height / blockSize);
+
+    // Divide into vertical strips of length 5
+    for (int v = 0; v < vertNum; v++) {
+      int rowStart = blockSize * v;
+      int rowEnd = Math.min(width, rowStart + blockSize);
+      // Divide into horizontal strips of length 5
+      for (int h = 0; h < horNum; h++) {
+        int colStart = blockSize * h;
+        int colEnd = Math.min(height, colStart + blockSize);
+        int times = (rowEnd - rowStart) * (colEnd - colStart);
+        int red = 0;
+        int green = 0;
+        int blue = 0;
+
+        // Loop through each row in the block
+        for (int r = rowStart; r < rowEnd; r++) {
+          // Loop through each column of the row in the block
+          for (int c = colStart; c < colEnd; c++) {
+            red += pixels[r][c].getRed();
+            green += pixels[r][c].getGreen();
+            blue += pixels[r][c].getBlue();
+          }
+        }
+
+        for (int r = rowStart; r < rowEnd; r++) {
+          for (int c = colStart; c < colEnd; c++) {
+            pixels[r][c].setColor(new Color(red / times, green / times, blue / times));
+          }
+        }
       }
     }
   }

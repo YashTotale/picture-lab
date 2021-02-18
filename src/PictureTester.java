@@ -136,7 +136,7 @@ public class PictureTester {
       System.out.println();
     }
     System.out.println("-----");
-    // Print the formatted title in Reversed colors
+    // Print the formatted title in reversed colors
     System.out.println("\u001b[1m\u001b[7m" + title + "\u001b[0m");
 
     // Create a folder in the 'processed' folder

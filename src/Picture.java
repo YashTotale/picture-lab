@@ -93,15 +93,6 @@ public class Picture extends SimplePicture {
     }
   }
 
-  public void pixelate() {
-    Pixel[][] pixels = this.getPixels2D();
-    for(int r = 0; r < pixels.length; r += 2) {
-      for(int c = 0; c < pixels[r].length; c++) {
-
-      }
-    }
-  }
-
   public void mirrorVertical() {
     Pixel[][] pixels = this.getPixels2D();
 
@@ -181,6 +172,16 @@ public class Picture extends SimplePicture {
           }
         }
         leftPixel = pixel;
+      }
+    }
+  }
+
+
+  public void pixelate() {
+    Pixel[][] pixels = this.getPixels2D();
+    for(int r = 0; r < pixels.length; r += 2) {
+      for(int c = 0; c < pixels[r].length; c++) {
+
       }
     }
   }

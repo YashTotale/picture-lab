@@ -68,6 +68,7 @@ public class PictureTester {
 
     section(MISC);
     testPixelate();
+    testQuadrants();
     testCollage();
     testGetAverageForColumn();
     testGetAverageForRow();
@@ -306,6 +307,15 @@ public class PictureTester {
     pic.pixelate(15);
 
     String title = "pixelate";
+    writeImage(pic, MISC + title);
+  }
+
+  public static void testQuadrants() {
+    test("Quadrants");
+    Picture pic = new Picture(IMAGE);
+    pic.quadrants();
+
+    String title = "quadrants";
     writeImage(pic, MISC + title);
   }
 

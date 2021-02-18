@@ -185,11 +185,11 @@ public class Picture extends SimplePicture {
     int vertNum = (int) Math.ceil(1.0 * width / blockSize);
     int horNum = (int) Math.ceil(1.0 * height / blockSize);
 
-    // Divide into vertical strips of length 5
+    // Divide into vertical strips of block size length
     for (int v = 0; v < vertNum; v++) {
       int rowStart = blockSize * v;
       int rowEnd = Math.min(width, rowStart + blockSize);
-      // Divide into horizontal strips of length 5
+      // Divide into horizontal strips of block size length
       for (int h = 0; h < horNum; h++) {
         int colStart = blockSize * h;
         int colEnd = Math.min(height, colStart + blockSize);
@@ -208,9 +208,36 @@ public class Picture extends SimplePicture {
           }
         }
 
+        // Loop again and set the average color
         for (int r = rowStart; r < rowEnd; r++) {
           for (int c = colStart; c < colEnd; c++) {
             pixels[r][c].setColor(new Color(red / times, green / times, blue / times));
+          }
+        }
+      }
+    }
+  }
+
+  public void quadrants() {
+    Pixel[][] pixels = this.getPixels2D();
+
+    for (int r = 0; r < pixels.length; r++) {
+      for (int c = 0; c < pixels[r].length; c++) {
+        if (r > pixels.length / 2) {
+          if (c > pixels[r].length / 2) {
+            pixels[r][c].setBlue(0);
+          } else {
+            int gray = (int) pixels[r][c].getAverage();
+            pixels[r][c].setColor(new Color(gray, gray, gray));
+          }
+        } else {
+          if (c > pixels[r].length / 2) {
+            pixels[r][c].setBlue(255 - pixels[r][c].getBlue());
+            pixels[r][c].setGreen(255 - pixels[r][c].getGreen());
+            pixels[r][c].setRed(255 - pixels[r][c].getRed());
+          } else {
+            pixels[r][c].setGreen(0);
+            pixels[r][c].setRed(0);
           }
         }
       }

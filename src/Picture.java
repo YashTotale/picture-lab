@@ -244,6 +244,36 @@ public class Picture extends SimplePicture {
     }
   }
 
+  public void stripes(int stripeSize) {
+    Pixel[][] pixels = this.getPixels2D();
+    String[] methods = {"negate", "grayscale", "onlyRed"};
+
+    for (int r = 0; r < pixels.length; r++) {
+      for (int c = 0; c < pixels[r].length; c++) {
+        int index = ((c + r) / stripeSize) % methods.length;
+        String method = methods[index];
+        switch (method) {
+          case "negate": {
+            pixels[r][c].setBlue(255 - pixels[r][c].getBlue());
+            pixels[r][c].setGreen(255 - pixels[r][c].getGreen());
+            pixels[r][c].setRed(255 - pixels[r][c].getRed());
+            break;
+          }
+          case "grayscale": {
+            int gray = (int) pixels[r][c].getAverage();
+            pixels[r][c].setColor(new Color(gray, gray, gray));
+            break;
+          }
+          case "onlyRed": {
+            pixels[r][c].setBlue(0);
+            pixels[r][c].setGreen(0);
+            break;
+          }
+        }
+      }
+    }
+  }
+
   public Color getAverageForColumn(int col) {
     Pixel[][] pixels = this.getPixels2D();
     int red = 0;

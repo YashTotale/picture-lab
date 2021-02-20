@@ -42,6 +42,7 @@ AP Computer Science Lab
 
 - Pixelate
 - Quadrants
+- Stripes
 - Collage
 - Average color for row
 - Average color for column
